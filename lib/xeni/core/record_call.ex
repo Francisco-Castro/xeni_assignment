@@ -12,7 +12,10 @@ defmodule Xeni.Core.RecordCall do
 
   def call(:time, time) do
     with {:ok, time} <- cast_number(time) do
-      {:ok, time}
+      hours_ago = Timex.shift(Timex.now(), hours: -time)
+      records = Xeni.Core.Records.latest_records(hours_ago)
+      result = compute_moving_average(records)
+      {:ok, result}
     end
   end
 

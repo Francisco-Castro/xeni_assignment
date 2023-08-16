@@ -7,7 +7,7 @@ defmodule Xeni.Repo.Migrations.AddRecordTable do
       add :high, :float, null: false
       add :low, :float, null: false
       add :close, :float, null: false
-      add :timestamp, :utc_datetime_usec
+      add :timestamp, :naive_datetime
     end
   end
 end

@@ -37,7 +37,7 @@ defmodule XeniWeb.RecordControllerTest do
     test "sucess: return moving average from the latest record", %{conn: conn} do
       [r1, _r2, r3] = generate_records(3)
 
-      assert Timex.before?(r1.timestamp, r3.timestamp)
+      assert Timex.before?(r3.timestamp, r1.timestamp)
 
       result =
         get(conn, "/api/average?window=last_1_items")
@@ -69,6 +69,50 @@ defmodule XeniWeb.RecordControllerTest do
       err_msg = "Invalid casting. Expected a number but received: #{invalid_value}"
       assert %{"error" => err_msg} == result
     end
+
+    test "sucess: return moving average from the latest hour", %{conn: conn} do
+      records = generate_records(120)
+
+      result =
+        get(conn, "/api/average?window=last_1_hour")
+        |> json_response(200)
+
+      assert %{"data" => %{"moving_average" => moving_average}} = result
+
+      expected = [
+        compute_mov_avg(records, 59),
+        compute_mov_avg(records, 60),
+        compute_mov_avg(records, 61)
+      ]
+
+      assert moving_average in expected
+    end
+
+    test "sucess: return moving average from the latest 2 hours", %{conn: conn} do
+      records = generate_records(180)
+
+      result =
+        get(conn, "/api/average?window=last_2_hour")
+        |> json_response(200)
+
+      assert %{"data" => %{"moving_average" => moving_average}} = result
+
+      expected = [
+        compute_mov_avg(records, 119),
+        compute_mov_avg(records, 120),
+        compute_mov_avg(records, 121)
+      ]
+
+      assert moving_average in expected
+    end
+  end
+
+  defp compute_mov_avg(records, count) do
+    Enum.take(records, count)
+    |> Enum.map(& &1.open)
+    |> Enum.sum()
+    |> Kernel./(count)
+    |> round_float()
   end
 
   defp generate_records(0), do: []
@@ -77,8 +121,15 @@ defmodule XeniWeb.RecordControllerTest do
     now = Timex.now()
 
     for minute <- 0..(count - 1) do
-      now_shifted = Timex.shift(now, minutes: minute)
+      now_shifted = Timex.shift(now, minutes: -minute)
       insert(:record, timestamp: now_shifted)
     end
+  end
+
+  defp round_float(float) do
+    float
+    |> Decimal.from_float()
+    |> Decimal.round(2)
+    |> Decimal.to_float()
   end
 end
