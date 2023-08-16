@@ -20,10 +20,10 @@ defmodule XeniWeb.Router do
     get "/", PageController, :home
   end
 
-  # Other scopes may use custom stacks.
-  # scope "/api", XeniWeb do
-  #   pipe_through :api
-  # end
+  scope "/api" do
+    pipe_through(:api)
+    get "/average", XeniWeb.RecordController, :average
+  end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
   if Application.compile_env(:xeni, :dev_routes) do
