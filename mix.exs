@@ -50,7 +50,9 @@ defmodule Xeni.MixProject do
       {:gettext, "~> 0.20"},
       {:jason, "~> 1.2"},
       {:plug_cowboy, "~> 2.5"},
-      {:ex_machina, "~> 2.7.0"}
+      {:ex_machina, "~> 2.7.0"},
+      {:timex, "~> 3.0"},
+      {:decimal, "~> 2.0"}
     ]
   end
 
