@@ -22,7 +22,20 @@ defmodule RecordParams do
   })
 end
 
-defmodule RecordSpec do
+defmodule AverageResponse do
+  require OpenApiSpex
+  alias OpenApiSpex.Schema
+  OpenApiSpex.schema(%{
+    title: "Insert Response",
+    description: "Returns the moving average",
+    type: :object,
+    example: %{
+      data: %{moving_average: 55.5}
+    }
+  })
+end
+
+defmodule InsertResponse do
   require OpenApiSpex
   alias OpenApiSpex.Schema
 
@@ -40,12 +53,14 @@ defmodule RecordSpec do
     },
     required: [:open, :high, :low, :close],
     example: %{
-      "id" => 123,
-      "open" => "10.0",
-      "high" => "15.0",
-      "low" => "5.0",
-      "close" => "11",
-      "timestamp" => "2017-09-13T10:11:12Z"
+      "data" => %{
+        "id" => 123,
+        "open" => "10.0",
+        "high" => "15.0",
+        "low" => "5.0",
+        "close" => "11",
+        "timestamp" => "2017-09-13T10:11:12Z"
+      }
     }
   })
 end
