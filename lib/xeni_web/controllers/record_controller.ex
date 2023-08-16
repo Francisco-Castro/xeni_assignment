@@ -4,8 +4,6 @@ defmodule XeniWeb.RecordController do
   alias XeniWeb.UrlHelper
   alias Xeni.Core.RecordCall
 
-  alias OpenApiSpex.Schema
-
   tags ["Records"]
   operation(:insert,
     summary: "Insert a record",

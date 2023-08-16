@@ -18,8 +18,7 @@ defmodule XeniWeb.Router do
   scope "/" do
     pipe_through :browser
 
-    get "/", PageController, :home
-    get "/swaggerui", OpenApiSpex.Plug.SwaggerUI, path: "/api/openapi"
+    get "/", OpenApiSpex.Plug.SwaggerUI, path: "/api/openapi"
   end
 
   scope "/api" do
