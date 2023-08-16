@@ -11,19 +11,22 @@ defmodule XeniWeb.Router do
   end
 
   pipeline :api do
+    plug OpenApiSpex.Plug.PutApiSpec, module: XeniWeb.ApiSpec
     plug :accepts, ["json"]
   end
 
-  scope "/", XeniWeb do
+  scope "/" do
     pipe_through :browser
 
     get "/", PageController, :home
+    get "/swaggerui", OpenApiSpex.Plug.SwaggerUI, path: "/api/openapi"
   end
 
   scope "/api" do
     pipe_through(:api)
     post "/insert", XeniWeb.RecordController, :insert
     get "/average", XeniWeb.RecordController, :average
+    get "/openapi", OpenApiSpex.Plug.RenderSpec, []
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
