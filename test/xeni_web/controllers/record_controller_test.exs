@@ -1,6 +1,37 @@
 defmodule XeniWeb.RecordControllerTest do
   use XeniWeb.ConnCase
 
+  @valid_payload %{
+    timestamp: "2023-08-16 02:46:47.018236Z",
+    open: "1.11",
+    high: "2.22",
+    low: "3.33",
+    close: "4.44"
+  }
+
+  describe "POST /insert" do
+    test "sucess: insert a record", %{conn: conn} do
+      assert %{
+               "data" => %{
+                 "close" => 4.44,
+                 "high" => 2.22,
+                 "low" => 3.33,
+                 "open" => 1.11,
+                 "timestamp" => "2023-08-16T02:46:47.018236Z"
+               }
+             } =
+               post(conn, "/api/insert", @valid_payload)
+               |> json_response(200)
+    end
+
+    test "error: when having a missing field", %{conn: conn} do
+      invalid_payload = @valid_payload |> Map.drop([:timestamp])
+      assert %{"error" => "[timestamp: {\"can't be blank\", [validation: :required]}]"} =
+               post(conn, "/api/insert", invalid_payload)
+               |> json_response(200)
+    end
+  end
+
   describe "GET /average" do
     test "error: invalid splitting", %{conn: conn} do
       result =

@@ -3,6 +3,10 @@ defmodule Xeni.Core.Records do
   alias Xeni.Schemas.Record
   import Ecto.Query
 
+  def insert(params) do
+    Repo.insert(params)
+  end
+
   def latest_records(count) when is_integer(count) do
     from(r in Record,
       limit: ^count,

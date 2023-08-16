@@ -2,6 +2,7 @@ defmodule Xeni.Schemas.Record do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @derive {Jason.Encoder, only: [:open, :high, :low, :close, :timestamp]}
   schema "records" do
     field :open, :float
     field :high, :float

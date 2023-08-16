@@ -22,6 +22,7 @@ defmodule XeniWeb.Router do
 
   scope "/api" do
     pipe_through(:api)
+    post "/insert", XeniWeb.RecordController, :insert
     get "/average", XeniWeb.RecordController, :average
   end
 

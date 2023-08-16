@@ -1,10 +1,19 @@
 defmodule Xeni.Core.RecordCall do
-  # alias Xeni.Schemas.Record
+  alias Xeni.Core.Records
+  alias Xeni.Schemas.Record
   @valid_fields [:open, :high, :low, :close]
+
+  def call(:insert, params) do
+    with %{valid?: true} = changeset <- Record.changeset(%Record{}, params) do
+      Records.insert(changeset)
+    else
+      invalid_changeset -> {:error, inspect(invalid_changeset.errors)}
+    end
+  end
 
   def call(:items, items) do
     with {:ok, items} <- cast_number(items) do
-      records = Xeni.Core.Records.latest_records(items)
+      records = Records.latest_records(items)
       result = compute_moving_average(records)
       {:ok, result}
     end
@@ -13,13 +22,14 @@ defmodule Xeni.Core.RecordCall do
   def call(:time, time) do
     with {:ok, time} <- cast_number(time) do
       hours_ago = Timex.shift(Timex.now(), hours: -time)
-      records = Xeni.Core.Records.latest_records(hours_ago)
+      records = Records.latest_records(hours_ago)
       result = compute_moving_average(records)
       {:ok, result}
     end
   end
 
   defp compute_moving_average(records, fields \\ :open)
+
   defp compute_moving_average(records, fields) do
     records
     |> Enum.map(fn r -> value_from_fields(r, sanitize_fields(fields)) end)

@@ -3,6 +3,16 @@ defmodule XeniWeb.RecordController do
   alias XeniWeb.UrlHelper
   alias Xeni.Core.RecordCall
 
+  def insert(conn, params) do
+    result =
+      case RecordCall.call(:insert, params) do
+        {:ok, value} -> %{data: value}
+        {:error, error} -> %{error: error}
+      end
+
+    json(conn, result)
+  end
+
   def average(conn, %{"window" => window} = _params) do
     result =
       case UrlHelper.split_string(window) do
