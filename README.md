@@ -4,8 +4,8 @@ The API exposes two endpoints:
 - POST `localhost:4000/api/insert` that adds data to the application
 - GET `localhost:4000/api/average` that returns the moving average given an specific time or number of elements. For example:
 
-  - [`localhost:4000/api/average?window=last_20_items`](localhost:4000/api/average?window=last_20_items) - should return the moving average of the last 20 items
-  - [`localhost:4000/api/average?window=last_1_hour`](localhost:4000/api/average?window=last_1_hour) - should return the moving average of all items that were inserted to the data store in the past hour
+  - [`localhost:4000/api/average?window=last_20_items`](http://localhost:4000/api/average?window=last_20_items) - should return the moving average of the last 20 items
+  - [`localhost:4000/api/average?window=last_1_hour`](http://localhost:4000/api/average?window=last_1_hour) - should return the moving average of all items that were inserted to the data store in the past hour
 
 To start your Phoenix server:
 
