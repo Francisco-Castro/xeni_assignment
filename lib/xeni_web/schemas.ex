@@ -53,6 +53,7 @@ defmodule BadRequestParametersForInsert do
 
   OpenApiSpex.schema(%{
     title: "Bad request Parameters For Insert",
+    description: "SOME DES",
     type: :object,
     example: %{"error" => "[open: {\"can't be blank\", [validation: :required]}]"}
   })

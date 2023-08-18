@@ -3,20 +3,20 @@ defmodule XeniWeb.RecordControllerTest do
 
   @valid_payload %{
     timestamp: "2023-08-16 02:46:47.018236Z",
-    open: "1.11",
-    high: "2.22",
-    low: "3.33",
-    close: "4.44"
+    open: "3.33",
+    high: "4.44",
+    low: "1.11",
+    close: "2.22"
   }
 
   describe "POST /insert" do
     test "sucess: insert a record", %{conn: conn} do
       assert %{
                "data" => %{
-                 "close" => 4.44,
-                 "high" => 2.22,
-                 "low" => 3.33,
-                 "open" => 1.11,
+                 "close" => 2.22,
+                 "high" => 4.44,
+                 "low" => 1.11,
+                 "open" => 3.33,
                  "timestamp" => "2023-08-16T02:46:47.018236Z"
                }
              } =
@@ -27,7 +27,10 @@ defmodule XeniWeb.RecordControllerTest do
     test "error: when having a missing field", %{conn: conn} do
       invalid_payload = @valid_payload |> Map.drop([:open])
 
-      assert %{"error" => "[open: {\"can't be blank\", [validation: :required]}]"} =
+      assert %{
+               "error" =>
+                 "[open: {\"Open must be in between High and Low\", []}, open: {\"can't be blank\", [validation: :required]}]"
+             } =
                post(conn, "/api/insert", invalid_payload)
                |> json_response(200)
     end
