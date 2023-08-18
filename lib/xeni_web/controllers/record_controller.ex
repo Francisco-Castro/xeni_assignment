@@ -43,19 +43,14 @@ defmodule XeniWeb.RecordController do
     ]
   )
 
-  def average(conn, %{"window" => window} = _params) do
-    result =
-      case UrlHelper.split_string(window) do
-        {:items, items} -> RecordCall.call(:items, items)
-        {:time, time} -> RecordCall.call(:time, time)
-        error -> error
-      end
-      |> case do
-        {:ok, value} -> %{data: %{moving_average: value}}
-        {:error, error} -> %{error: error}
-      end
+  action_fallback XeniWeb.FallbackController
 
-    json(conn, result)
+  def average(conn, %{"window" => window} = _params) do
+    with {items_or_time, integer} when items_or_time in [:items, :time] <-
+           UrlHelper.split_string(window),
+         {:ok, result} <- RecordCall.call(items_or_time, integer) do
+      json(conn, %{data: %{moving_average: result}})
+    end
   end
 
   def average(conn, _params) do
