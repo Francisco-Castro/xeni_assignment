@@ -14,8 +14,7 @@ defmodule Xeni.Core.RecordCall do
   def call(:items, items) do
     with {:ok, items} <- cast_number(items) do
       records = Records.latest_records(items)
-      result = compute_moving_average(records)
-      {:ok, result}
+      compute_moving_average(records)
     end
   end
 
@@ -23,19 +22,22 @@ defmodule Xeni.Core.RecordCall do
     with {:ok, time} <- cast_number(time) do
       hours_ago = Timex.shift(Timex.now(), hours: -time)
       records = Records.latest_records(hours_ago)
-      result = compute_moving_average(records)
-      {:ok, result}
+      compute_moving_average(records)
     end
   end
 
   defp compute_moving_average(records, fields \\ :open)
+  defp compute_moving_average([], _fields), do: {:error, :no_records_found}
 
   defp compute_moving_average(records, fields) do
-    records
-    |> Enum.map(fn r -> value_from_fields(r, sanitize_fields(fields)) end)
-    |> Enum.sum()
-    |> Kernel./(length(records))
-    |> round_float()
+    result =
+      records
+      |> Enum.map(fn r -> value_from_fields(r, sanitize_fields(fields)) end)
+      |> Enum.sum()
+      |> Kernel./(length(records))
+      |> round_float()
+
+    {:ok, result}
   end
 
   defp sanitize_fields(:all), do: sanitize_fields(@valid_fields)

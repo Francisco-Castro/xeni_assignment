@@ -26,6 +26,7 @@ defmodule XeniWeb.RecordControllerTest do
 
     test "error: when having a missing field", %{conn: conn} do
       invalid_payload = @valid_payload |> Map.drop([:open])
+
       assert %{"error" => "[open: {\"can't be blank\", [validation: :required]}]"} =
                post(conn, "/api/insert", invalid_payload)
                |> json_response(200)
@@ -54,6 +55,14 @@ defmodule XeniWeb.RecordControllerTest do
   end
 
   describe "GET /average - items" do
+    test "error: no records found", %{conn: conn} do
+      result =
+        get(conn, "/api/average?window=last_1_items")
+        |> json_response(200)
+
+      assert %{"error" => "no_records_found"} == result
+    end
+
     test "error: invalid casting for items", %{conn: conn} do
       invalid_value = "notANumber"
 
@@ -90,6 +99,14 @@ defmodule XeniWeb.RecordControllerTest do
   end
 
   describe "GET /average - time" do
+    test "error: no records found", %{conn: conn} do
+      result =
+        get(conn, "/api/average?window=last_1_hour")
+        |> json_response(200)
+
+      assert %{"error" => "no_records_found"} == result
+    end
+
     test "error: invalid casting for time", %{conn: conn} do
       invalid_value = "notANumber"
 
