@@ -4,6 +4,8 @@ defmodule XeniWeb.RecordController do
   alias XeniWeb.UrlHelper
   alias Xeni.Core.RecordCall
 
+  action_fallback XeniWeb.FallbackController
+
   tags(["Records"])
 
   operation(:insert,
@@ -16,13 +18,9 @@ defmodule XeniWeb.RecordController do
   )
 
   def insert(conn, params) do
-    result =
-      case RecordCall.call(:insert, params) do
-        {:ok, value} -> %{data: value}
-        {:error, error} -> %{error: error}
-      end
-
-    json(conn, result)
+    with {:ok, record} <- RecordCall.call(:insert, params) do
+      json(conn, %{data: record})
+    end
   end
 
   operation(:average,
@@ -42,8 +40,6 @@ defmodule XeniWeb.RecordController do
       ok: {"Record", "application/json", AverageResponse}
     ]
   )
-
-  action_fallback XeniWeb.FallbackController
 
   def average(conn, %{"window" => window} = _params) do
     with {items_or_time, integer} when items_or_time in [:items, :time] <-
