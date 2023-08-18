@@ -12,7 +12,7 @@ defmodule Xeni.Schemas.Record do
   end
 
   @required_fields ~w(open high low close)a
-  @optional_fields ~w()a
+  @optional_fields ~w(timestamp)a
 
   def changeset(record, attrs) do
     record

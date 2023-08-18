@@ -25,8 +25,8 @@ defmodule XeniWeb.RecordControllerTest do
     end
 
     test "error: when having a missing field", %{conn: conn} do
-      invalid_payload = @valid_payload |> Map.drop([:timestamp])
-      assert %{"error" => "[timestamp: {\"can't be blank\", [validation: :required]}]"} =
+      invalid_payload = @valid_payload |> Map.drop([:open])
+      assert %{"error" => "[open: {\"can't be blank\", [validation: :required]}]"} =
                post(conn, "/api/insert", invalid_payload)
                |> json_response(200)
     end
@@ -79,7 +79,7 @@ defmodule XeniWeb.RecordControllerTest do
 
     test "sucess: return moving average from the latest n records", %{conn: conn} do
       [_r1, r2, r3] = generate_records(3)
-      mov_avg = (r3.open + r2.open) / 2
+      mov_avg = round_float((r3.open + r2.open) / 2)
 
       result =
         get(conn, "/api/average?window=last_2_items")

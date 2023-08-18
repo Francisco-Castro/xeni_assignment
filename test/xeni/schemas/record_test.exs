@@ -9,7 +9,7 @@ defmodule Xeni.Schemas.RecordTest do
         high: Enum.random(1..10),
         low: Enum.random(1..10),
         open: Enum.random(1..10),
-        timestamp: DateTime.utc_now
+        timestamp: Timex.now()
       }
 
       changeset = Record.changeset(%Record{}, params)
@@ -30,7 +30,7 @@ defmodule Xeni.Schemas.RecordTest do
 
       errors = changeset.errors
 
-      [:open, :high, :low, :close, :timestamp]
+      [:open, :high, :low, :close]
       |> Enum.each(fn required_key ->
         assert Keyword.has_key?(errors, required_key)
         assert {"can't be blank", [validation: :required]} = errors[required_key]
