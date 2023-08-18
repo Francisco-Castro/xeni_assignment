@@ -40,7 +40,7 @@ defmodule XeniWeb.RecordControllerTest do
         |> json_response(200)
 
       err_msg =
-        "Invalid property. Expected a string of the form last_INTEGER_items or last_INTEGER_hour"
+        "Invalid url property. Expected a string of the form last_INTEGER_items or last_INTEGER_hour"
 
       assert %{"error" => err_msg} == result
     end

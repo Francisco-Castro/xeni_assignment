@@ -8,7 +8,7 @@ defmodule XeniWeb.UrlHelper do
         {:time, time}
 
       _incorrect_splitting ->
-        {:error, "Invalid property. Expected a string of the form last_INTEGER_items or last_INTEGER_hour"}
+        {:error, "Invalid url property. Expected a string of the form last_INTEGER_items or last_INTEGER_hour"}
     end
   end
 end

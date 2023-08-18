@@ -13,7 +13,8 @@ defmodule XeniWeb.RecordController do
     description: "Insert a record by the given paramaters.",
     request_body: {"User params", "application/json", RecordParams},
     responses: [
-      ok: {"Record", "application/json", InsertResponse}
+      ok: {"Record", "application/json", InsertResponse},
+      bad_request: {"Bad request parameters", "application/json", BadRequestParametersForInsert}
     ]
   )
 
@@ -37,7 +38,8 @@ defmodule XeniWeb.RecordController do
       ]
     ],
     responses: [
-      ok: {"Record", "application/json", AverageResponse}
+      ok: {"Record", "application/json", AverageResponse},
+      bad_request: {"Bad request parameters", "application/json", BadRequestParametersForAverage}
     ]
   )
 

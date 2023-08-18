@@ -10,7 +10,7 @@ defmodule RecordParams do
       open: %Schema{type: :float, description: "Open value"},
       high: %Schema{type: :float, description: "High value"},
       low: %Schema{type: :float, description: "Low value"},
-      close: %Schema{type: :float, description: "Close value"},
+      close: %Schema{type: :float, description: "Close value"}
     },
     required: [:open, :high, :low, :close],
     example: %{
@@ -25,6 +25,7 @@ end
 defmodule AverageResponse do
   require OpenApiSpex
   alias OpenApiSpex.Schema
+
   OpenApiSpex.schema(%{
     title: "Insert Response",
     description: "Returns the moving average",
@@ -32,6 +33,28 @@ defmodule AverageResponse do
     example: %{
       data: %{moving_average: 55.5}
     }
+  })
+end
+
+defmodule BadRequestParametersForAverage do
+  require OpenApiSpex
+  alias OpenApiSpex.Schema
+
+  OpenApiSpex.schema(%{
+    title: "Bad request Parameters For Average",
+    type: :object,
+    example: %{"error" => "Invalid url property. Expected a string of the form last_INTEGER_items or last_INTEGER_hour"}
+  })
+end
+
+defmodule BadRequestParametersForInsert do
+  require OpenApiSpex
+  alias OpenApiSpex.Schema
+
+  OpenApiSpex.schema(%{
+    title: "Bad request Parameters For Insert",
+    type: :object,
+    example: %{"error" => "[open: {\"can't be blank\", [validation: :required]}]"}
   })
 end
 
