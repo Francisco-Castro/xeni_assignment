@@ -60,7 +60,7 @@ defmodule XeniWeb.RecordControllerTest do
         get(conn, "/api/average?window=last_1_items")
         |> json_response(200)
 
-      assert %{"error" => "no_records_found"} == result
+      assert %{"error" => "No records found. The DB might be empty."} == result
     end
 
     test "error: invalid casting for items", %{conn: conn} do
@@ -104,7 +104,7 @@ defmodule XeniWeb.RecordControllerTest do
         get(conn, "/api/average?window=last_1_hour")
         |> json_response(200)
 
-      assert %{"error" => "no_records_found"} == result
+      assert %{"error" => "No records found. The DB might be empty."} == result
     end
 
     test "error: invalid casting for time", %{conn: conn} do

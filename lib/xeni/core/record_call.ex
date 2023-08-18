@@ -27,7 +27,7 @@ defmodule Xeni.Core.RecordCall do
   end
 
   defp compute_moving_average(records, fields \\ :open)
-  defp compute_moving_average([], _fields), do: {:error, :no_records_found}
+  defp compute_moving_average([], _fields), do: {:error, "No records found. The DB might be empty."}
 
   defp compute_moving_average(records, fields) do
     result =
