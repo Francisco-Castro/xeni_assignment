@@ -12,7 +12,7 @@ defmodule Xeni.Schemas.RecordTest do
         timestamp: Timex.now()
       }
 
-      changeset = Record.changeset(%Record{}, params)
+      changeset = Record.create_changeset(%Record{}, params)
       assert changeset.valid?
 
       record = apply_changes(changeset)
@@ -33,7 +33,7 @@ defmodule Xeni.Schemas.RecordTest do
         timestamp: Timex.now()
       }
 
-      changeset = Record.changeset(%Record{}, params)
+      changeset = Record.create_changeset(%Record{}, params)
       refute changeset.valid?
       assert [high: {"High must be greather or equal to Low", []}] = changeset.errors
     end
@@ -47,7 +47,7 @@ defmodule Xeni.Schemas.RecordTest do
         timestamp: Timex.now()
       }
 
-      changeset = Record.changeset(%Record{}, params)
+      changeset = Record.create_changeset(%Record{}, params)
       refute changeset.valid?
       assert [open: {"Open must be in between High and Low", []}] = changeset.errors
     end
@@ -61,13 +61,13 @@ defmodule Xeni.Schemas.RecordTest do
         timestamp: Timex.now()
       }
 
-      changeset = Record.changeset(%Record{}, params)
+      changeset = Record.create_changeset(%Record{}, params)
       refute changeset.valid?
       assert [close: {"Close must be in between High and Low", []}] = changeset.errors
     end
 
     test "error: missing required attributes" do
-      changeset = Record.changeset(%Record{}, %{})
+      changeset = Record.create_changeset(%Record{}, %{})
       refute changeset.valid?
 
       errors = changeset.errors

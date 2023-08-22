@@ -14,7 +14,7 @@ defmodule Xeni.Schemas.Record do
   @required_fields ~w(open high low close)a
   @optional_fields ~w(timestamp)a
 
-  def changeset(record, attrs) do
+  def create_changeset(record, attrs) do
     record
     |> cast(attrs, @required_fields ++ @optional_fields)
     |> validate_required(@required_fields)

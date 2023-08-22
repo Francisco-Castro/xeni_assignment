@@ -1,14 +1,10 @@
 defmodule Xeni.Core.RecordCall do
   alias Xeni.Core.Records
-  alias Xeni.Schemas.Record
+  # alias Xeni.Schemas.Record
   @valid_fields [:open, :high, :low, :close]
 
   def call(:insert, params) do
-    with %{valid?: true} = changeset <- Record.changeset(%Record{}, params) do
-      Records.insert(changeset)
-    else
-      invalid_changeset -> {:error, inspect(invalid_changeset.errors)}
-    end
+    Records.create_entry(params)
   end
 
   def call(:items, items) do
@@ -27,7 +23,9 @@ defmodule Xeni.Core.RecordCall do
   end
 
   defp compute_moving_average(records, fields \\ :open)
-  defp compute_moving_average([], _fields), do: {:error, "No records found. The DB might be empty."}
+
+  defp compute_moving_average([], _fields),
+    do: {:error, :empty_db}
 
   defp compute_moving_average(records, fields) do
     result =

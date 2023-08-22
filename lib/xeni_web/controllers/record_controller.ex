@@ -3,6 +3,7 @@ defmodule XeniWeb.RecordController do
   use OpenApiSpex.ControllerSpecs
   alias XeniWeb.UrlHelper
   alias Xeni.Core.RecordCall
+  alias Xeni.Core.Records
 
   action_fallback XeniWeb.FallbackController
 
@@ -19,8 +20,8 @@ defmodule XeniWeb.RecordController do
   )
 
   def insert(conn, params) do
-    with {:ok, record} <- RecordCall.call(:insert, params) do
-      json(conn, %{data: record})
+    with {:ok, record} <- Records.create_entry(params) do
+      conn |> put_status(:created) |> json(%{data: record})
     end
   end
 
