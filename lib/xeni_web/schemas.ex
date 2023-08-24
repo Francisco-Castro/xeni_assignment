@@ -36,26 +36,51 @@ defmodule AverageResponse do
   })
 end
 
-defmodule BadRequestParametersForAverage do
+defmodule InternalServiceErrorResponse do
   require OpenApiSpex
   alias OpenApiSpex.Schema
 
   OpenApiSpex.schema(%{
-    title: "Bad request Parameters For Average",
+    title: "Internal Service Error",
     type: :object,
-    example: %{"error" => "Invalid url property. Expected a string of the form last_INTEGER_items or last_INTEGER_hour"}
+    example: %{
+      "error" => "Internal Server Error. Maybe our DB is empty. Try inserting a record first."
+    }
   })
 end
 
-defmodule BadRequestParametersForInsert do
+defmodule BadRequestParametersResponse do
   require OpenApiSpex
   alias OpenApiSpex.Schema
 
   OpenApiSpex.schema(%{
-    title: "Bad request Parameters For Insert",
-    description: "SOME DES",
+    title: "Bad request Parameters",
     type: :object,
-    example: %{"error" => "[open: {\"can't be blank\", [validation: :required]}]"}
+    example: [
+      %{
+        "error" =>
+          "Invalid url property. Expected a string of the form last_INTEGER_items or last_INTEGER_hour"
+      },
+      %{
+        "error" => "Invalid casting. Expected a number but received: __NOT_A_NUMBER__"
+      }
+    ]
+  })
+end
+
+defmodule UnprocessableEntityResponse do
+  require OpenApiSpex
+  alias OpenApiSpex.Schema
+
+  OpenApiSpex.schema(%{
+    title: "Unprocessable Entity",
+    type: :object,
+    example: [
+      %{
+        "errors" => "[open: {\"Open must be in between High and Low\", []}]"
+      },
+      %{"errors" => "[high: {\"can't be blank\", [validation: :required]}]"}
+    ]
   })
 end
 

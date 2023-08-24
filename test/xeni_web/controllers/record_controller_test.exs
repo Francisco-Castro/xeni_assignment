@@ -3,10 +3,10 @@ defmodule XeniWeb.RecordControllerTest do
 
   @valid_payload %{
     timestamp: "2023-08-16 02:46:47.018236Z",
-    open: "3.33",
-    high: "4.44",
-    low: "1.11",
-    close: "2.22"
+    open: 3.33,
+    high: 4.44,
+    low: 1.11,
+    close: 2.22
   }
 
   describe "POST /insert" do
@@ -25,12 +25,17 @@ defmodule XeniWeb.RecordControllerTest do
     end
 
     test "error: when having a missing field", %{conn: conn} do
-      invalid_payload = @valid_payload |> Map.drop([:open])
+      invalid_payload = @valid_payload |> Map.drop([:high])
 
-      assert %{
-               "errors" =>
-                 "[open: {\"Open must be in between High and Low\", []}, open: {\"can't be blank\", [validation: :required]}]"
-             } =
+      assert %{"errors" => "[high: {\"can't be blank\", [validation: :required]}]"} =
+               post(conn, "/api/insert", invalid_payload)
+               |> json_response(422)
+    end
+
+    test "error: invalid ohlc record", %{conn: conn} do
+      invalid_payload = @valid_payload |> Map.put(:open, @valid_payload.high + 0.01)
+
+      assert %{"errors" => "[open: {\"Open must be in between High and Low\", []}]"} =
                post(conn, "/api/insert", invalid_payload)
                |> json_response(422)
     end
@@ -63,7 +68,10 @@ defmodule XeniWeb.RecordControllerTest do
         get(conn, "/api/average?window=last_1_items")
         |> json_response(500)
 
-      assert %{"error" => "Our DB looks empty"} == result
+      assert %{
+               "error" =>
+                 "Internal Server Error. Maybe our DB is empty. Try inserting a record first."
+             } == result
     end
 
     test "error: invalid casting for items", %{conn: conn} do
@@ -107,7 +115,10 @@ defmodule XeniWeb.RecordControllerTest do
         get(conn, "/api/average?window=last_1_hour")
         |> json_response(500)
 
-      assert %{"error" => "Our DB looks empty"} == result
+      assert %{
+               "error" =>
+                 "Internal Server Error. Maybe our DB is empty. Try inserting a record first."
+             } == result
     end
 
     test "error: invalid casting for time", %{conn: conn} do

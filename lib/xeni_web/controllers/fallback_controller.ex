@@ -6,7 +6,11 @@ defmodule XeniWeb.FallbackController do
   end
 
   def call(conn, {:error, :empty_db}) do
-    conn |> put_status(:internal_server_error) |> json(%{error: "Our DB looks empty"})
+    conn
+    |> put_status(:internal_server_error)
+    |> json(%{
+      error: "Internal Server Error. Maybe our DB is empty. Try inserting a record first."
+    })
   end
 
   def call(conn, {:error, error}) do

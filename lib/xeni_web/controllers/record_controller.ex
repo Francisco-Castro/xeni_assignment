@@ -15,7 +15,7 @@ defmodule XeniWeb.RecordController do
     request_body: {"User params", "application/json", RecordParams},
     responses: [
       ok: {"Record", "application/json", InsertResponse},
-      bad_request: {"Bad request parameters", "application/json", BadRequestParametersForInsert}
+      unprocessable_entity: {"Unprocessable Entity", "application/json", UnprocessableEntityResponse},
     ]
   )
 
@@ -40,7 +40,8 @@ defmodule XeniWeb.RecordController do
     ],
     responses: [
       ok: {"Record", "application/json", AverageResponse},
-      bad_request: {"Bad request parameters", "application/json", BadRequestParametersForAverage}
+      bad_request: {"Bad request parameters", "application/json", BadRequestParametersResponse},
+      internal_server_error: {"Internal Service Error", "application/json", InternalServiceErrorResponse}
     ]
   )
 
